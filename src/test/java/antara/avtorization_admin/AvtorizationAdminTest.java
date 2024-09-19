@@ -1,19 +1,16 @@
-package antara.admin_login;
+package antara.avtorization_admin;
 
+import antara.avtorization_admin.fragments.AvtorizationAdminFragment;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import antara.admin_login.fragments.AdminLoginFragment;
-import antara.admin_login.helpers.AdminLoginPropertyHelper;
-import antara.admin_login.postprocessors.LoginCheck;
-import antara.admin_login.samplers.AdminLoginThreadGroup;
+import antara.avtorization_admin.helpers.AdminLoginPropertyHelper;
+import antara.avtorization_admin.samplers.AvtorizationAdminThreadGroup;
 import us.abstracta.jmeter.javadsl.core.TestPlanStats;
-import us.abstracta.jmeter.javadsl.core.controllers.DslModuleController;
 import us.abstracta.jmeter.javadsl.core.engines.EmbeddedJmeterEngine;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
@@ -29,7 +26,7 @@ import static antara.common.helpers.VisualizersHelper.*;
 import static us.abstracta.jmeter.javadsl.JmeterDsl.*;
 
 
-public class AdminLoginTest {
+public class AvtorizationAdminTest {
     boolean debugEnable;
     boolean errorLogEnable;
     boolean influxDbLogEnable;
@@ -38,7 +35,7 @@ public class AdminLoginTest {
     boolean debugPostProcessorEnable;
     double throughputPerMinute;
 
-    static final Logger logger = LogManager.getLogger(AdminLoginTest.class);
+    static final Logger logger = LogManager.getLogger(AvtorizationAdminTest.class);
     EmbeddedJmeterEngine embeddedJmeterEngine = new EmbeddedJmeterEngine();
     Properties properties = new Properties();
 
@@ -60,24 +57,22 @@ public class AdminLoginTest {
     @SuppressWarnings("unused")
     @Test
     private void test() throws IOException, InterruptedException, TimeoutException {
-        AdminLoginFragment adminLoginFragment = new AdminLoginFragment();
+        AvtorizationAdminFragment adminLoginFragment = new AvtorizationAdminFragment();
 
         TestPlanStats run = testPlan(
                 getCookiesClean(),
                 getCacheManager(),
                 getHeaders(),
                 getHttpDefaults(),
-                AdminLoginThreadGroup.getThreadGroup("TG_ADMIN_LOGIN", debugEnable)
+                AvtorizationAdminThreadGroup.getThreadGroup("TG_AVTORIZATION_ADMIN", debugEnable)
                         .children(
                                 ifController(s -> !debugEnable,
                                         testAction(throughputTimer(throughputPerMinute).perThread())
                                 ),
-                                transaction("UC_ADMIN_LOGIN",
+                                transaction("UC_AVTORIZATION_ADMIN",
                                         adminLoginFragment.get()
                                 )
-
                         ),
-
 
                 influxDbLog(influxDbLogEnable),
                 resultTree(resultTreeEnable),

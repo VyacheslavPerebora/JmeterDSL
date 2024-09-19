@@ -1,4 +1,4 @@
-package antara.admin_login.helpers;
+package antara.avtorization_admin.helpers;
 
 import antara.common.helpers.PropertyHelper;
 
