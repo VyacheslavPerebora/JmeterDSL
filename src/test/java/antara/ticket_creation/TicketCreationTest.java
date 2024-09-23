@@ -39,7 +39,7 @@ public class TicketCreationTest {
     boolean debugPostProcessorEnable;
     double throughputPerMinute;
 
-    static final Logger logger = LogManager.getLogger(TicketCreationTest.class);
+    static final Logger logger = Logger.getLogger(TicketCreationTest.class);
     EmbeddedJmeterEngine embeddedJmeterEngine = new EmbeddedJmeterEngine();
     Properties properties = new Properties();
 
