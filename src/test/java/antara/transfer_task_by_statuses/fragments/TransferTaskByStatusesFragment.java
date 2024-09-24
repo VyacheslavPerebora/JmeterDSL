@@ -27,10 +27,10 @@ public class TransferTaskByStatusesFragment implements SimpleController {
                         ),
                 httpSampler(">_/login/", "/login/")
                         .method(HTTPConstants.POST)
-                        .rawParam("username", "${username}")
-                        .rawParam("password", "${password}")
+                        .rawParam("username", "${__urlencode(${username})}")
+                        .rawParam("password", "${__urlencode(${password})}")
                         .rawParam("next", "/")
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
                         .children(
                                 jsr223PreProcessor(GetUserCredsFromCSV.class),
                                 regexExtractor("login_check", "(Logout)")
@@ -46,7 +46,7 @@ public class TransferTaskByStatusesFragment implements SimpleController {
                                 ),
                 httpSampler("<_/datatables_ticket_list/{some_token}", "/datatables_ticket_list/${query_encoded}")
                         .method(HTTPConstants.GET)
-                        .rawParam("length", "10")
+                        .rawParam("length", "${__urlencode(10)}")
                         .children(
                                 regexExtractor("random_ticket_id", "ticket.+?(\\d+).*?\\[")
                                         .defaultValue("ERR_random_ticket_id")
@@ -62,8 +62,8 @@ public class TransferTaskByStatusesFragment implements SimpleController {
                         ),
                 httpSampler(">_/tickets/{random_ticket_id}/update/", "/tickets/${random_ticket_id}/update/")
                         .method(HTTPConstants.POST)
-                        .rawParam("new_status", "${new_status}")
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
+                        .rawParam("new_status", "${__urlencode(${new_status})}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
                         .children(
                                 jsr223PostProcessor(AssertionResponseTransferTask.class)
                         )

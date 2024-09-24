@@ -24,10 +24,10 @@ public class AvtorizationAdminFragment implements SimpleController {
                         ),
                 httpSampler(">_/login/", "/login/")
                         .method(HTTPConstants.POST)
-                        .rawParam("username", "${__P(ADMIN_LOGIN)}")
-                        .rawParam("password", "${__P(ADMIN_PASS)}")
+                        .rawParam("username", "${__urlencode(${__P(ADMIN_LOGIN)})}")
+                        .rawParam("password", "${__urlencode(${__P(ADMIN_PASS)})}")
                         .rawParam("next", "/")
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
                         .children(
                                 regexExtractor("login_check", "(Logout)")
                                         .defaultValue("ERR_login_check"),

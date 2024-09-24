@@ -32,10 +32,10 @@ public class TicketCreationFragment implements SimpleController {
                         ),
                 httpSampler(">_/login/", "/login/")
                         .method(HTTPConstants.POST)
-                        .rawParam("username", "${username}")
-                        .rawParam("password", "${password}")
+                        .rawParam("username", "${__urlencode(${username})}")
+                        .rawParam("password", "${__urlencode(${password})}")
                         .rawParam("next", "/")
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
                         .children(
                                 jsr223PreProcessor(GetUserCredsFromCSV.class),
                                 regexExtractor("login_check", "(Logout)")
@@ -52,14 +52,14 @@ public class TicketCreationFragment implements SimpleController {
                         ),
                 httpSampler(">_/tickets/submit/", "/tickets/submit/")
                         .method(HTTPConstants.POST)
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
-                        .rawParam("queue", "${__Random(1,2,)}")
-                        .rawParam("title", "${__RandomString(11,qwertyuiopasdfghjklzxcvbnmQWERTASDFGZXCVB,)}")
-                        .rawParam("body", "${__RandomString(11,qwertyuiopasdfghjklzxcvbnmQWERTASDFGZXCVB,)}")
-                        .rawParam("priority", "${__Random(1,5,)}")
-                        .rawParam("due_date", "${__RandomDate(,2020-08-15,2024-05-12,,)}")
-                        .rawParam("submitter_email", "${random_email}")
-                        .rawParam("assigned_to", "${owner_user_number}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
+                        .rawParam("queue", "${__urlencode(${__Random(1,2,)})}")
+                        .rawParam("title", "${__urlencode(${__RandomString(11,qwertyuiopasdfghjklzxcvbnmQWERTASDFGZXCVB,)})}")
+                        .rawParam("body", "${__urlencode(${__RandomString(11,qwertyuiopasdfghjklzxcvbnmQWERTASDFGZXCVB,)})}")
+                        .rawParam("priority", "${__urlencode(${__Random(1,5,)})}")
+                        .rawParam("due_date", "${__urlencode(${__RandomDate(,2020-08-15,2024-05-12,,)})}")
+                        .rawParam("submitter_email", "${__urlencode(${random_email})}")
+                        .rawParam("assigned_to", "${__urlencode(${owner_user_number})}")
                         .children(
                                 jsr223PreProcessor(GetRandomEmail.class),
                                 regexExtractor("ticket_id", "tickets/(\\d+?)/")
@@ -79,7 +79,7 @@ public class TicketCreationFragment implements SimpleController {
                                 ),
                 httpSampler("<_/datatables_ticket_list/{some_token}", "/datatables_ticket_list/${query_encoded}")
                         .method(HTTPConstants.GET)
-                        .rawParam("length", "100")
+                        .rawParam("length", "${__urlencode(100)}")
                         .children(
                                 regexExtractor("records_Total", "recordsTotal.+?(\\d+),")
                                         .defaultValue("ERR_records_Total"),
@@ -88,8 +88,8 @@ public class TicketCreationFragment implements SimpleController {
                 ifController("${__jexl3(${records_Total} > 100)}",
                         httpSampler("<_/datatables_ticket_list/{some_token}", "/datatables_ticket_list/${query_encoded}")
                                 .method(HTTPConstants.GET)
-                                .rawParam("start", "${start}")
-                                .rawParam("length", "100")
+                                .rawParam("start", "${__urlencode(${start})}")
+                                .rawParam("length", "${__urlencode(100)}")
                                 .children(
                                         jsr223PreProcessor(StartParameterCalculation.class),
                                         responseAssertion().containsRegexes("\\w+?-${ticket_id}")

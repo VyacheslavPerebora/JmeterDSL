@@ -30,10 +30,10 @@ public class PaginationFragment implements SimpleController {
                         ),
                 httpSampler(">_/login/", "/login/")
                         .method(HTTPConstants.POST)
-                        .rawParam("username", "${username}")
-                        .rawParam("password", "${password}")
+                        .rawParam("username", "${__urlencode(${username})}")
+                        .rawParam("password", "${__urlencode(${password})}")
                         .rawParam("next", "/")
-                        .rawParam("csrfmiddlewaretoken", "${csrfmiddlewaretoken}")
+                        .rawParam("csrfmiddlewaretoken", "${__urlencode(${csrfmiddlewaretoken})}")
                         .children(
                                 jsr223PreProcessor(GetUserCredsFromCSV.class),
                                 regexExtractor("login_check", "(Logout)")
@@ -49,7 +49,7 @@ public class PaginationFragment implements SimpleController {
                                 ),
                 httpSampler("<_/datatables_ticket_list/{some_token}", "/datatables_ticket_list/${query_encoded}")
                         .method(HTTPConstants.GET)
-                        .rawParam("length", "10")
+                        .rawParam("length", "${__urlencode(10)}")
                         .children(
                                 regexExtractor("records_Total", "recordsTotal.+?(\\d+),")
                                         .defaultValue("ERR_records_Total"),
@@ -60,8 +60,8 @@ public class PaginationFragment implements SimpleController {
                 ifController("${__jexl3(${records_Total} > 10)}",
                         httpSampler("<_/datatables_ticket_list/{some_token}", "/datatables_ticket_list/${query_encoded}")
                                 .method(HTTPConstants.GET)
-                                .rawParam("start", "${start}")
-                                .rawParam("length", "10")
+                                .rawParam("start", "${__urlencode(${start})}")
+                                .rawParam("length", "${__urlencode(10)}")
                                 .children(
                                         responseAssertion().containsSubstrings("${check_updated_list_tickets}").invertCheck(true)
                                 )
