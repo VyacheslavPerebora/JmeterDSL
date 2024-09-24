@@ -1,13 +1,10 @@
-package antara.ticket_creation;
+package antara.pagination;
 
-import antara.avtorization_admin.fragments.AvtorizationAdminFragment;
 import antara.avtorization_admin.helpers.AdminLoginPropertyHelper;
 import antara.common.helpers.PropertyHelper;
+import antara.pagination.fragments.PaginationFragment;
 import antara.ticket_creation.fragments.TicketCreationFragment;
 import antara.ticket_creation.samplers.TicketCreationThreadGroup;
-import antara.user_creation.fragments.UserCreationFragment;
-import antara.user_creation.samplers.UserCreationThreadGroup;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -30,7 +27,7 @@ import static antara.common.helpers.VisualizersHelper.*;
 import static us.abstracta.jmeter.javadsl.JmeterDsl.*;
 
 
-public class TicketCreationTest {
+public class PaginationTest {
     boolean debugEnable;
     boolean errorLogEnable;
     boolean influxDbLogEnable;
@@ -39,14 +36,14 @@ public class TicketCreationTest {
     boolean debugPostProcessorEnable;
     double throughputPerMinute;
 
-    static final Logger logger = Logger.getLogger(TicketCreationTest.class);
+    static final Logger logger = Logger.getLogger(PaginationTest.class);
     EmbeddedJmeterEngine embeddedJmeterEngine = new EmbeddedJmeterEngine();
     Properties properties = new Properties();
 
     @BeforeTest
     private void init() throws IOException {
         properties = AdminLoginPropertyHelper.readAdminLoginProperties();
-        AdminLoginPropertyHelper.setPropertiesToEngine(embeddedJmeterEngine, properties);
+        PropertyHelper.setPropertiesToEngine(embeddedJmeterEngine, properties);
 
         debugEnable = Boolean.parseBoolean(properties.getProperty("DEBUG_ENABLE"));
         errorLogEnable = Boolean.parseBoolean(properties.getProperty("ERROR_LOG_ENABLE"));
@@ -60,20 +57,20 @@ public class TicketCreationTest {
     @SuppressWarnings("unused")
     @Test
     private void test() throws IOException, InterruptedException, TimeoutException {
-        TicketCreationFragment ticketCreationFragment = new TicketCreationFragment();
+        PaginationFragment paginationFragment = new PaginationFragment();
 
         TestPlanStats run = testPlan(
                 getCookiesClean(),
                 getCacheManager(),
                 getHeaders(),
                 getHttpDefaults(),
-                TicketCreationThreadGroup.getThreadGroup("TG_TICKET_CREATION", debugEnable)
+                TicketCreationThreadGroup.getThreadGroup("TG_PAGINATION", debugEnable)
                         .children(
                                 ifController(s -> !debugEnable,
                                         testAction(throughputTimer(throughputPerMinute).perThread())
                                 ),
-                                transaction("UC_TICKET_CREATION",
-                                        ticketCreationFragment.get()
+                                transaction("UC_PAGINATION",
+                                        paginationFragment.get()
                                 )
                         ),
                 influxDbLog(influxDbLogEnable),

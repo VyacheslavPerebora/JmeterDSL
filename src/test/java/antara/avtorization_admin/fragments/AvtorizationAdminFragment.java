@@ -1,5 +1,6 @@
 package antara.avtorization_admin.fragments;
 
+import org.apache.http.entity.ContentType;
 import org.apache.jmeter.protocol.http.util.HTTPConstants;
 import antara.avtorization_admin.postprocessors.LoginCheck;
 import antara.common.interfaces.SimpleController;

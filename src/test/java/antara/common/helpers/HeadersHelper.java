@@ -1,5 +1,6 @@
 package antara.common.helpers;
 
+import org.apache.http.entity.ContentType;
 import us.abstracta.jmeter.javadsl.http.HttpHeaders;
 
 import static us.abstracta.jmeter.javadsl.JmeterDsl.httpHeaders;

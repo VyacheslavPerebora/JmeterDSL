@@ -3,6 +3,7 @@ package antara.user_creation.fragments;
 import antara.common.interfaces.SimpleController;
 import antara.user_creation.samplers.SaveUserCredsInCSV;
 import antara.user_creation.processors.preprocessors.CreateUser;
+import org.apache.http.entity.ContentType;
 import org.apache.jmeter.protocol.http.util.HTTPConstants;
 import us.abstracta.jmeter.javadsl.core.controllers.DslSimpleController;
 

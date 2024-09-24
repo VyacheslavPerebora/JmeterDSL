@@ -1,13 +1,10 @@
-package antara.ticket_creation;
+package antara.transfer_task_by_statuses;
 
-import antara.avtorization_admin.fragments.AvtorizationAdminFragment;
 import antara.avtorization_admin.helpers.AdminLoginPropertyHelper;
 import antara.common.helpers.PropertyHelper;
-import antara.ticket_creation.fragments.TicketCreationFragment;
+import antara.pagination.fragments.PaginationFragment;
 import antara.ticket_creation.samplers.TicketCreationThreadGroup;
-import antara.user_creation.fragments.UserCreationFragment;
-import antara.user_creation.samplers.UserCreationThreadGroup;
-import org.apache.log4j.LogManager;
+import antara.transfer_task_by_statuses.fragments.TransferTaskByStatusesFragment;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -25,12 +22,11 @@ import static antara.common.helpers.HeadersHelper.getHeaders;
 import static antara.common.helpers.HttpHelper.getHttpDefaults;
 import static antara.common.helpers.LogHelper.getTestResultString;
 import static antara.common.helpers.LogHelper.influxDbLog;
-import static antara.common.helpers.PropertyHelper.readCommonProperties;
 import static antara.common.helpers.VisualizersHelper.*;
 import static us.abstracta.jmeter.javadsl.JmeterDsl.*;
 
 
-public class TicketCreationTest {
+public class TransferTaskByStatusesTest {
     boolean debugEnable;
     boolean errorLogEnable;
     boolean influxDbLogEnable;
@@ -39,14 +35,14 @@ public class TicketCreationTest {
     boolean debugPostProcessorEnable;
     double throughputPerMinute;
 
-    static final Logger logger = Logger.getLogger(TicketCreationTest.class);
+    static final Logger logger = Logger.getLogger(TransferTaskByStatusesTest.class);
     EmbeddedJmeterEngine embeddedJmeterEngine = new EmbeddedJmeterEngine();
     Properties properties = new Properties();
 
     @BeforeTest
     private void init() throws IOException {
         properties = AdminLoginPropertyHelper.readAdminLoginProperties();
-        AdminLoginPropertyHelper.setPropertiesToEngine(embeddedJmeterEngine, properties);
+        PropertyHelper.setPropertiesToEngine(embeddedJmeterEngine, properties);
 
         debugEnable = Boolean.parseBoolean(properties.getProperty("DEBUG_ENABLE"));
         errorLogEnable = Boolean.parseBoolean(properties.getProperty("ERROR_LOG_ENABLE"));
@@ -60,20 +56,20 @@ public class TicketCreationTest {
     @SuppressWarnings("unused")
     @Test
     private void test() throws IOException, InterruptedException, TimeoutException {
-        TicketCreationFragment ticketCreationFragment = new TicketCreationFragment();
+        TransferTaskByStatusesFragment transferTaskByStatusesFragment = new TransferTaskByStatusesFragment();
 
         TestPlanStats run = testPlan(
                 getCookiesClean(),
                 getCacheManager(),
                 getHeaders(),
                 getHttpDefaults(),
-                TicketCreationThreadGroup.getThreadGroup("TG_TICKET_CREATION", debugEnable)
+                TicketCreationThreadGroup.getThreadGroup("TG_TRANSFER_TASK_BY_STATUSES", debugEnable)
                         .children(
                                 ifController(s -> !debugEnable,
                                         testAction(throughputTimer(throughputPerMinute).perThread())
                                 ),
-                                transaction("UC_TICKET_CREATION",
-                                        ticketCreationFragment.get()
+                                transaction("UC_TRANSFER_TASK_BY_STATUSES",
+                                        transferTaskByStatusesFragment.get()
                                 )
                         ),
                 influxDbLog(influxDbLogEnable),
